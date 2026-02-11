@@ -145,9 +145,11 @@ while true; do
       # If CPU 2 temperature sensor is present, check if it is overheating too.
       # Do not apply Dell default dynamic fan control profile as it has already been applied before
       if $IS_CPU2_TEMPERATURE_SENSOR_PRESENT && CPU2_OVERHEATING; then
-        COMMENT="CPU 1 and CPU 2 temperatures are too high, Dell default dynamic fan control profile applied for safety"
+        COMMENT="
+        CPU 1 and CPU 2 temperatures are too high, Dell default dynamic fan control profile applied for safety"
       else
-        COMMENT="CPU 1 temperature is too high, Dell default dynamic fan control profile applied for safety"
+        COMMENT="
+        CPU 1 temperature is too high, Dell default dynamic fan control profile applied for safety"
       fi
     fi
   # If CPU 2 temperature sensor is present, check if it is overheating then apply Dell default dynamic fan control profile if true
@@ -156,7 +158,8 @@ while true; do
 
     if ! $IS_DELL_DEFAULT_FAN_CONTROL_PROFILE_APPLIED; then
       IS_DELL_DEFAULT_FAN_CONTROL_PROFILE_APPLIED=true
-      COMMENT="CPU 2 temperature is too high, Dell default dynamic fan control profile applied for safety"
+      COMMENT="
+      CPU 2 temperature is too high, Dell default dynamic fan control profile applied for safety"
     fi
   elif CPU1_HEATING || $IS_CPU2_TEMPERATURE_SENSOR_PRESENT && CPU2_HEATING; then
     HIGHEST_CPU_TEMPERATURE=$CPU1_TEMPERATURE
@@ -172,7 +175,8 @@ while true; do
     # Check if user fan control profile is applied then apply it if not
     if $IS_DELL_DEFAULT_FAN_CONTROL_PROFILE_APPLIED; then
       IS_DELL_DEFAULT_FAN_CONTROL_PROFILE_APPLIED=false
-      COMMENT="CPU temperature decreased and is now OK (<= $CPU_TEMPERATURE_THRESHOLD°C), user's fan control profile applied."
+      #COMMENT="CPU temperature decreased and is now OK (<= $CPU_TEMPERATURE_THRESHOLD°C), user's fan control profile applied."
+      COMMENT="CPU <= $CPU_TEMPERATURE_THRESHOLD°C, Control Active"
     fi
   fi
 
@@ -194,9 +198,6 @@ while true; do
     printf "%s\n" "$HEADER"
     TABLE_HEADER_PRINT_COUNTER=0
   fi
-  #debug
-  echo $INLET_TEMPERATURE "Z" $CPUS_TEMPERATURES "Z" $EXHAUST_TEMPERATURE "Z" $CURRENT_FAN_CONTROL_PROFILE "Z" $THIRD_PARTY_PCIE_CARD_DELL_DEFAULT_COOLING_RESPONSE_STATUS "Z" $COMMENT
-  #end debug
   print_temperature_array_line "$INLET_TEMPERATURE" "$CPUS_TEMPERATURES" "$EXHAUST_TEMPERATURE" "$CURRENT_FAN_CONTROL_PROFILE" "$THIRD_PARTY_PCIE_CARD_DELL_DEFAULT_COOLING_RESPONSE_STATUS" "$COMMENT"
   ((TABLE_HEADER_PRINT_COUNTER++))
   wait $SLEEP_PROCESS_PID
