@@ -285,9 +285,9 @@ print_interpolated_fan_speeds() {
     else
       highest_CPU_temperature=$(("$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION" + "$i" * "$step"))
     fi
-    fan_speed=$(calculate_interpolated_fan_speed "$LOCAL_DECIMAL_FAN_SPEED" "$LOCAL_DECIMAL_HIGH_FAN_SPEED" "$highest_CPU_temperature" "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION" "$CPU_TEMPERATURE_THRESHOLD")
-    bar_length=$(($fan_speed * $chart_width / 100))
-    empty_length=$(($chart_width - $bar_length))
+    fan_speed="$(calculate_interpolated_fan_speed "$LOCAL_DECIMAL_FAN_SPEED" "$LOCAL_DECIMAL_HIGH_FAN_SPEED" "$highest_CPU_temperature" "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION" "$CPU_TEMPERATURE_THRESHOLD")"
+    bar_length="$(($fan_speed * $chart_width / 100))"
+    empty_length="$(($chart_width - $bar_length))"
 
     # Calculate color based on highest_CPU_temperature
     if [ "$highest_CPU_temperature" -lt "$green_threshold" ]; then
@@ -407,9 +407,9 @@ function print_temperature_array_line() {
 }
 
 # Define functions to check if CPU 1 and CPU 2 temperatures are above the threshold
-function CPU1_HEATING() { [ ${CPU1_TEMPERATURE} -gt ${CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION} ]; }
+function CPU1_HEATING() { ${CPU1_TEMPERATURE} -gt ${CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION}; }
 function CPU1_OVERHEATING() { [ $CPU1_TEMPERATURE -gt $CPU_TEMPERATURE_THRESHOLD ]; }
-function CPU2_HEATING() { [ ${CPU2_TEMPERATURE} -gt ${CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION} ]; }
+function CPU2_HEATING() { ${CPU2_TEMPERATURE} -gt ${CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION}; }
 function CPU2_OVERHEATING() { [ $CPU2_TEMPERATURE -gt $CPU_TEMPERATURE_THRESHOLD ]; }
 
 function print_error() {
