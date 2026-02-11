@@ -286,8 +286,8 @@ print_interpolated_fan_speeds() {
       highest_CPU_temperature=$(("$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION" + "$i" * "$step"))
     fi
     fan_speed=$(calculate_interpolated_fan_speed "$LOCAL_DECIMAL_FAN_SPEED" "$LOCAL_DECIMAL_HIGH_FAN_SPEED" "$highest_CPU_temperature" "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION" "$CPU_TEMPERATURE_THRESHOLD")
-    bar_length=$((${fan_speed} * ${chart_width} / 100))
-    empty_length=$((${chart_width} - ${bar_length}))
+    bar_length=$(($fan_speed * $chart_width / 100))
+    empty_length=$(($chart_width - $bar_length))
 
     # Calculate color based on highest_CPU_temperature
     if [ "$highest_CPU_temperature" -lt "$green_threshold" ]; then
@@ -323,7 +323,10 @@ function calculate_interpolated_fan_speed() {
   local -r highest_CPU_temperature=$3
   local -r CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION=$4
   local -r CPU_TEMPERATURE_THRESHOLD=$5
-  return $(("$LOCAL_DECIMAL_FAN_SPEED" + (("$LOCAL_DECIMAL_HIGH_FAN_SPEED" - "$LOCAL_DECIMAL_FAN_SPEED") * (("$highest_CPU_temperature" - "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION") / ("$CPU_TEMPERATURE_THRESHOLD" - "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION")))))
+  local RETURN_FAN_SPEED
+  RETURN_FAN_SPEED=$(("$LOCAL_DECIMAL_FAN_SPEED" + (("$LOCAL_DECIMAL_HIGH_FAN_SPEED" - "$LOCAL_DECIMAL_FAN_SPEED") * (("$highest_CPU_temperature" - "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION") / ("$CPU_TEMPERATURE_THRESHOLD" - "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION")))))
+  #return $(("$LOCAL_DECIMAL_FAN_SPEED" + (("$LOCAL_DECIMAL_HIGH_FAN_SPEED" - "$LOCAL_DECIMAL_FAN_SPEED") * (("$highest_CPU_temperature" - "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION") / ("$CPU_TEMPERATURE_THRESHOLD" - "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION")))))
+  return $RETURN_FAN_SPEED
 }
 
 # Returns the maximum value among the given integer arguments.
