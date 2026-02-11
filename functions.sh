@@ -260,13 +260,13 @@ print_interpolated_fan_speeds() {
   echo -e "\e[1mInterpolated Fan Speeds Chart\e[0m"
   echo "=================================================================="
 
-  local temperature_range=$((CPU_TEMPERATURE_THRESHOLD - CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION))
-  local step=$((temperature_range / 9))
+  local temperature_range=$(("$CPU_TEMPERATURE_THRESHOLD" - "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION"))
+  local step=$(("$temperature_range" / 9))
   local chart_width=50
 
   # Calculate color thresholds
-  local green_threshold=$((CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION + temperature_range * 80 / 100))
-  local yellow_threshold=$((CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION + temperature_range * 90 / 100))
+  local green_threshold=$(("$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION" + "$temperature_range" * 80 / 100))
+  local yellow_threshold=$(("$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION" + "$temperature_range" * 90 / 100))
 
   # Print column names
   printf " Temp | Fan  | %-${chart_width}s\n" "Speed"
@@ -283,11 +283,11 @@ print_interpolated_fan_speeds() {
     if [ $i -eq 9 ]; then
       highest_CPU_temperature="$CPU_TEMPERATURE_THRESHOLD"
     else
-      highest_CPU_temperature=$((CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION + i * step))
+      highest_CPU_temperature=$(("$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION" + "$i" * "$step"))
     fi
-    fan_speed=$(calculate_interpolated_fan_speed LOCAL_DECIMAL_FAN_SPEED LOCAL_DECIMAL_HIGH_FAN_SPEED highest_CPU_temperature CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION CPU_TEMPERATURE_THRESHOLD)
-    bar_length=$((fan_speed * chart_width / 100))
-    empty_length=$((chart_width - bar_length))
+    fan_speed=$(calculate_interpolated_fan_speed "$LOCAL_DECIMAL_FAN_SPEED" "$LOCAL_DECIMAL_HIGH_FAN_SPEED" "$highest_CPU_temperature" "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION" "$CPU_TEMPERATURE_THRESHOLD")
+    bar_length=$(("$fan_speed" * "$chart_width" / 100))
+    empty_length=$(("$chart_width" - "$bar_length"))
 
     # Calculate color based on highest_CPU_temperature
     if [ "$highest_CPU_temperature" -lt "$green_threshold" ]; then
@@ -323,7 +323,7 @@ function calculate_interpolated_fan_speed() {
   local -r highest_CPU_temperature=$3
   local -r CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION=$4
   local -r CPU_TEMPERATURE_THRESHOLD=$5
-  return $((LOCAL_DECIMAL_FAN_SPEED + ((LOCAL_DECIMAL_HIGH_FAN_SPEED - LOCAL_DECIMAL_FAN_SPEED) * ((highest_CPU_temperature - CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION) / (CPU_TEMPERATURE_THRESHOLD - CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION)))))
+  return $(("$LOCAL_DECIMAL_FAN_SPEED" + (("$LOCAL_DECIMAL_HIGH_FAN_SPEED" - "$LOCAL_DECIMAL_FAN_SPEED") * (("$highest_CPU_temperature" - "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION") / ("$CPU_TEMPERATURE_THRESHOLD" - "$CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION")))))
 }
 
 # Returns the maximum value among the given integer arguments.
@@ -357,25 +357,25 @@ function build_header() {
   number_of_dashes=$(((number_of_CPUs-1)*CPU_column_width/2))
 
   # Loop to add dashes
-  for ((i=1; i<=number_of_dashes; i++)); do
+  for ((i=1; i<="$number_of_dashes"; i++)); do
     header+="-"
   done
 
   header+=" Temperatures ---"
 
   # Check parity and add an extra dash on the right if odd
-  if (( (number_of_CPUs - 1) * CPU_column_width % 2 != 0 )); then
+  if (( ("$number_of_CPUs" - 1) * "$CPU_column_width" % 2 != 0 )); then
     header+="-"
   fi
 
   # Loop to add dashes
-  for ((i=1; i<=number_of_dashes; i++)); do
+  for ((i=1; i<="$number_of_dashes"; i++)); do
     header+="-"
   done
   header+=$'\n    Date & time      Inlet  CPU 1 '
 
   # Loop to add CPU columns
-  for ((i=2; i<=number_of_CPUs; i++)); do
+  for ((i=2; i<="$number_of_CPUs"; i++)); do
     header+=" CPU $i "
   done
 
