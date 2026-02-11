@@ -141,7 +141,7 @@ function retrieve_temperatures() {
   if $IS_CPU2_TEMPERATURE_SENSOR_PRESENT; then
     CPU2_TEMPERATURE=$(echo $CPU_DATA | awk "{print \$$CPU2_TEMPERATURE_INDEX;}")
   else
-    CPU2_TEMPERATURE="-"
+    CPU2_TEMPERATURE=""
   fi
 
   # Initialize CPUS_TEMPERATURES
@@ -249,6 +249,13 @@ print_interpolated_fan_speeds() {
   local CPU_TEMPERATURE_THRESHOLD=$2
   local LOCAL_DECIMAL_FAN_SPEED=$3
   local LOCAL_DECIMAL_HIGH_FAN_SPEED=$4
+
+#debug
+  echo $CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION
+  echo $CPU_TEMPERATURE_THRESHOLD
+  echo $LOCAL_DECIMAL_FAN_SPEED
+  echo $LOCAL_DECIMAL_HIGH_FAN_SPEED
+#end debug
 
   echo -e "\e[1mInterpolated Fan Speeds Chart\e[0m"
   echo "=================================================================="
