@@ -245,10 +245,10 @@ function get_Dell_server_model() {
 # Returns:
 #   None (prints the results to stdout)
 print_interpolated_fan_speeds() {
-  local CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION=$1
-  local CPU_TEMPERATURE_THRESHOLD=$2
-  local LOCAL_DECIMAL_FAN_SPEED=$3
-  local LOCAL_DECIMAL_HIGH_FAN_SPEED=$4
+  local -i CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION=$1
+  local -i CPU_TEMPERATURE_THRESHOLD=$2
+  local -i LOCAL_DECIMAL_FAN_SPEED=$3
+  local -i LOCAL_DECIMAL_HIGH_FAN_SPEED=$4
 
 #debug
   echo $CPU_TEMPERATURE_THRESHOLD_FOR_FAN_SPEED_INTERPOLATION
